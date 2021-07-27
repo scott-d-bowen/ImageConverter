@@ -36,15 +36,22 @@ if (CommandLine.arguments.count < 2) {
     imageFile = CommandLine.arguments[1]
     
     let image = NSImage(contentsOfFile: imageFile!)
-    let outputURL = URL(fileURLWithPath: "usr/share/man/man1/\(imageFile!).heic")
+    // let outputURL = URL(fileURLWithPath: "usr/share/man/man1/\(imageFile!).heic")
+    let outputURL = URL(fileURLWithPath: "\(imageFile!).heic")
+    
+    // 3
+    let quality: CFString = "0.63683" as CFString
+    let options: NSDictionary = [
+        kCGImageDestinationLossyCompressionQuality: ( quality ) // as CFNumber/CFString Type!?
+    ]
     
     guard let destination = CGImageDestinationCreateWithURL(outputURL as CFURL,
                                                             AVFileType.heic as CFString,
                                                             1,
-                                                            nil) else { fatalError("Unable to create CGImageDestination")
+                                                            options) else { fatalError("Unable to create CGImageDestination")
     }
     
-    CGImageDestinationAddImage(destination, image!.cgImage!, nil)
+    CGImageDestinationAddImage(destination, image!.cgImage!, options)
     CGImageDestinationFinalize(destination)
 }
 
